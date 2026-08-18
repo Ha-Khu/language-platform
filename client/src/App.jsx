@@ -3,16 +3,19 @@ import './App.css'
 
 function App() {
   const [message, setMessage] = useState("")
-  const [reply, setReply] = useState("")
+  const [messages, setMessages] = useState([])
 
   async function handleSend() {
+    const newMessages = [...messages, {role: "user", content: message}]
+    setMessages(newMessages)
     const res = await fetch("http://localhost:3001/api/chat", {
       method: "POST",
       headers: {"Content-type": "application/json"},
-      body: JSON.stringify({message})
+      body: JSON.stringify({messages: newMessages})
     })
     const data = await res.json()
-    setReply(data.reply)
+    setMessages([... newMessages, {role: "assistant", content: data.reply}])
+    setMessage("")
   }
 
   return (
@@ -25,7 +28,11 @@ function App() {
 
       <button onClick={handleSend}>Send</button>
 
-      <div>{reply}</div>
+      {messages.map((m, i)=>(
+        <div key={i}>
+          <strong>{m.role}:</strong> {m.content}
+        </div>
+      ))}
     </div>
   )
   
