@@ -1,6 +1,7 @@
 import express from 'express'
 import bcrypt from 'bcrypt'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
 const router = express.Router()
 
 router.post("/register", async (req, res)=>{
@@ -22,6 +23,34 @@ router.post("/register", async (req, res)=>{
     res.status(201).json({message: "User registered successfully"})
   } catch (error){
     res.status(500).json({error: "Registration failed"})
+  }
+})
+
+router.post("/login", async (req, res)=>{
+  try{
+    const {email, password} = req.body
+    if(!email || !password){
+      res.status(400).json({error: "email and password required"})
+      return
+    }
+    let checkMail = "SELECT * FROM users WHERE email = ?"
+    const[rows] = await db.query(checkMail, [email])
+    if(rows.length === 0){
+      res.status(401).json({error: "Invalid credentials"})
+      return
+    }
+    const user = rows[0]
+    const passwordMatch = await bcrypt.compare(password, user.password)
+    if(!passwordMatch){
+      res.status(401).json({error: "Invalid credentials"})
+      return
+    }
+    const token = jwt.sign({id: user.id, name: user.name},
+      process.env.JWT_SECRET,
+      {expiresIn: "7d"})
+    res.json({token, user: { id: user.id, name: user.name, email: user.email }})
+  } catch (error){
+    res.status(500).json({error: "Login failed"})
   }
 })
 
