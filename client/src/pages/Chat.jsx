@@ -1,16 +1,17 @@
 import { useState } from 'react'
-import './App.css'
 
 function Chat() {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
+  const token = localStorage.getItem('token')
 
   async function handleSend() {
     const newMessages = [...messages, {role: "user", content: message}]
     setMessages(newMessages)
     const res = await fetch("http://localhost:3001/api/chat", {
       method: "POST",
-      headers: {"Content-type": "application/json"},
+      headers: {"Content-type": "application/json",
+                "Authorization": `Bearer ${token}`},
       body: JSON.stringify({messages: newMessages})
     })
     const data = await res.json()
