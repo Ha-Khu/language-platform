@@ -1,41 +1,17 @@
-import { useState } from 'react'
-import './App.css'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Login from './pages/Login'
+import Chat from './pages/Chat'
 
-function App() {
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState([])
-
-  async function handleSend() {
-    const newMessages = [...messages, {role: "user", content: message}]
-    setMessages(newMessages)
-    const res = await fetch("http://localhost:3001/api/chat", {
-      method: "POST",
-      headers: {"Content-type": "application/json"},
-      body: JSON.stringify({messages: newMessages})
-    })
-    const data = await res.json()
-    setMessages([... newMessages, {role: "assistant", content: data.reply}])
-    setMessage("")
-  }
-
-  return (
-    <div>
-      <input 
-      type="text" 
-      value={message}
-      onChange={e => setMessage(e.target.value)}
-      />
-
-      <button onClick={handleSend}>Send</button>
-
-      {messages.map((m, i)=>(
-        <div key={i}>
-          <strong>{m.role}:</strong> {m.content}
-        </div>
-      ))}
-    </div>
+function App(){
+  return(
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />}/>
+        <Route path='chat' element={<Chat />}/>
+      </Routes>
+    </BrowserRouter>
   )
-  
 }
 
 export default App
+
