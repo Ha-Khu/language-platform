@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Chat() {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
+  const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
   async function handleSend() {
@@ -19,6 +21,11 @@ function Chat() {
     setMessage("")
   }
 
+  function handleLogout(){
+    localStorage.removeItem('token')
+    navigate("/login")
+  }
+
   return (
     <div>
       <input 
@@ -28,6 +35,7 @@ function Chat() {
       />
 
       <button onClick={handleSend}>Send</button>
+      <button onClick={handleLogout}>Log Out</button>
 
       {messages.map((m, i)=>(
         <div key={i}>
