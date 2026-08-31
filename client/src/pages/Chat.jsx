@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 function Chat() {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
+  const [conversationId, setConversationId] = useState(null)
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
@@ -17,8 +18,27 @@ function Chat() {
       body: JSON.stringify({messages: newMessages})
     })
     const data = await res.json()
-    setMessages([... newMessages, {role: "assistant", content: data.reply}])
+    const finalMessages = [... newMessages, {role: "assistant", content: data.reply}]
+    setMessages(finalMessages)
     setMessage("")
+
+    if(conversationId === null){
+      const newCon = await fetch("http://localhost:3001/api/conversations", {
+        method: "POST",
+        headers: {"Content-type": "application/json",
+                  "Authorization": `Bearer ${token}`},
+        body: JSON.stringify({scenario: "restaurant", messages: finalMessages})
+      })
+      const conData = await newCon.json()
+      setConversationId(conData.id)
+    } else {
+      const exiCon = await fetch(`http://localhost:3001/api/conversations/${conversationId}`, {
+        method: "PUT",
+        headers: {"Content-type": "application/json",
+                  "Authorization": `Bearer ${token}`},
+        body: JSON.stringify({messages: finalMessages})
+      })
+    }
   }
 
   function handleLogout(){
