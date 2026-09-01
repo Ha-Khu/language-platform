@@ -54,6 +54,16 @@ function Chat() {
     loadConversations()
   }, [])
 
+  async function chooseConversation(id){
+    const res = await fetch(`http://localhost:3001/api/conversations/${id}`, {
+      method: "GET",
+      headers: {"Authorization" : `Bearer ${token}`}
+    })
+    const data = await res.json()
+    setMessages(data.messages)
+    setConversationId(data.id)
+  }
+
   function handleLogout(){
     localStorage.removeItem('token')
     navigate("/login")
@@ -78,7 +88,7 @@ function Chat() {
 
       <div>
         {conversations.map(c =>(
-          <div key={c.id}>
+          <div key={c.id} onClick={() => chooseConversation(c.id)}>
             {c.scenario} - {c.updated_at}
           </div>
         ))}
