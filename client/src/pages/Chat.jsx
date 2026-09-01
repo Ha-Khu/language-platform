@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 function Chat() {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
   const [conversationId, setConversationId] = useState(null)
+  const [conversations, setConversations] = useState([])
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
@@ -41,6 +42,18 @@ function Chat() {
     }
   }
 
+  useEffect(() =>{
+    async function loadConversations(){
+      const res = await fetch("http://localhost:3001/api/conversations", {
+        method: "GET",
+        headers: {"Authorization" : `Bearer ${token}`}
+      })
+      const data = await res.json()
+      setConversations(data)
+    }
+    loadConversations()
+  }, [])
+
   function handleLogout(){
     localStorage.removeItem('token')
     navigate("/login")
@@ -62,6 +75,14 @@ function Chat() {
           <strong>{m.role}:</strong> {m.content}
         </div>
       ))}
+
+      <div>
+        {conversations.map(c =>(
+          <div key={c.id}>
+            {c.scenario} - {c.updated_at}
+          </div>
+        ))}
+      </div>
     </div>
   )
   
