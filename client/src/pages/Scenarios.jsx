@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 function Scenarios(){
   const [scenarios, setScenarios] = useState([])
   const token = localStorage.getItem('token')
+  const navigate = useNavigate()
 
   useEffect(()=>{
     async function loadScenarios(){
@@ -17,10 +18,14 @@ function Scenarios(){
     loadScenarios()
   }, [])
 
+  function selectScenario(key){
+    navigate(`/chat/${key}`)
+  }
+
   return(
     <div>
       {scenarios.map(s =>(
-        <div key={s.key}>
+        <div key={s.key} onClick={() => selectScenario(s.key)}>
           {s.name} - {s.difficulty} - {s.language}
         </div>
       ))}
