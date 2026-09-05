@@ -4,6 +4,7 @@ import Chat from './pages/Chat'
 import Register from './pages/Register'
 import Landing from './pages/Landing'
 import ProtectedRoute from './components/ProtectedRoute'
+import Scenarios from './pages/Scenarios'
 
 function App(){
   return(
@@ -11,10 +12,12 @@ function App(){
       <Routes>
         <Route path='/' element={<Landing />} />
         <Route path='/register' element={<Register />}/>
-        <Route path="/login" element={<Login />}/>
+        <Route path='/login' element={<Login />}/>
+        <Route path='/scenarios' element={<Scenarios />}/>
         <Route path='/chat' element={
           <ProtectedRoute>
             <Chat />
+            <Scenarios />
           </ProtectedRoute>
           }/>
       </Routes>
