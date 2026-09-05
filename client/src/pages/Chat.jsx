@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 function Chat() {
   const [message, setMessage] = useState("")
@@ -7,6 +8,7 @@ function Chat() {
   const [conversationId, setConversationId] = useState(null)
   const [conversations, setConversations] = useState([])
   const navigate = useNavigate()
+  const {scenario} = useParams()
   const token = localStorage.getItem('token')
 
   async function handleSend() {
@@ -16,7 +18,7 @@ function Chat() {
       method: "POST",
       headers: {"Content-type": "application/json",
                 "Authorization": `Bearer ${token}`},
-      body: JSON.stringify({messages: newMessages})
+      body: JSON.stringify({messages: newMessages, scenario})
     })
     const data = await res.json()
     const finalMessages = [... newMessages, {role: "assistant", content: data.reply}]
@@ -28,7 +30,7 @@ function Chat() {
         method: "POST",
         headers: {"Content-type": "application/json",
                   "Authorization": `Bearer ${token}`},
-        body: JSON.stringify({scenario: "restaurant", messages: finalMessages})
+        body: JSON.stringify({scenario, messages: finalMessages})
       })
       const conData = await newCon.json()
       setConversationId(conData.id)
@@ -37,7 +39,7 @@ function Chat() {
         method: "PUT",
         headers: {"Content-type": "application/json",
                   "Authorization": `Bearer ${token}`},
-        body: JSON.stringify({messages: finalMessages})
+        body: JSON.stringify({messages: finalMessages, scenario})
       })
     }
   }

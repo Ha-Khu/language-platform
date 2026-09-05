@@ -14,7 +14,7 @@ function App(){
         <Route path='/register' element={<Register />}/>
         <Route path='/login' element={<Login />}/>
         <Route path='/scenarios' element={<Scenarios />}/>
-        <Route path='/chat' element={
+        <Route path='/chat/:scenario' element={
           <ProtectedRoute>
             <Chat />
             <Scenarios />
