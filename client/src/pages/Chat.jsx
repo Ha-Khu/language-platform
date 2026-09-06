@@ -52,6 +52,10 @@ function Chat() {
       })
       const data = await res.json()
       setConversations(data)
+      const existing = data.find(c => c.scenario === scenario)
+      if(existing){
+        chooseConversation(existing.id)
+      }
     }
     loadConversations()
   }, [])
