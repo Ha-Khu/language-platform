@@ -6,7 +6,6 @@ function Chat() {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
   const [conversationId, setConversationId] = useState(null)
-  const [conversations, setConversations] = useState([])
   const navigate = useNavigate()
   const {scenario} = useParams()
   const token = localStorage.getItem('token')
@@ -35,7 +34,7 @@ function Chat() {
       const conData = await newCon.json()
       setConversationId(conData.id)
     } else {
-      const exiCon = await fetch(`http://localhost:3001/api/conversations/${conversationId}`, {
+      await fetch(`http://localhost:3001/api/conversations/${conversationId}`, {
         method: "PUT",
         headers: {"Content-type": "application/json",
                   "Authorization": `Bearer ${token}`},
@@ -51,7 +50,6 @@ function Chat() {
         headers: {"Authorization" : `Bearer ${token}`}
       })
       const data = await res.json()
-      setConversations(data)
       const existing = data.find(c => c.scenario === scenario)
       if(existing){
         chooseConversation(existing.id)
@@ -70,6 +68,18 @@ function Chat() {
     setConversationId(data.id)
   }
 
+  async function deleteConversation(){
+    if(!conversationId){
+      return
+    }
+    await fetch(`http://localhost:3001/api/conversations/${conversationId}`, {
+      method: "DELETE",
+      headers: {"Authorization": `Bearer ${token}`}
+    })
+    setMessages([])
+    setConversationId(null)
+  }
+
   function handleLogout(){
     localStorage.removeItem('token')
     navigate("/login")
@@ -85,6 +95,7 @@ function Chat() {
 
       <button onClick={handleSend}>Send</button>
       <button onClick={handleLogout}>Log Out</button>
+      <button onClick={deleteConversation}>DELETE CONVERSATION</button>
 
       {messages.map((m, i)=>(
         <div key={i}>
@@ -92,13 +103,8 @@ function Chat() {
         </div>
       ))}
 
-      <div>
-        {conversations.map(c =>(
-          <div key={c.id} onClick={() => chooseConversation(c.id)}>
-            {c.scenario} - {c.updated_at}
-          </div>
-        ))}
-      </div>
+
+
     </div>
   )
   
