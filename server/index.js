@@ -9,6 +9,7 @@ import verifyToken from './middleware/verifyToken.js'
 import conversationsRouter from './routes/conversations.js'
 import { scenarios } from './scenarios.js'
 import evaluateRouter from './routes/evaluate.js'
+import { writingScenarios } from './writingScenarios.js'
 
 app.use(cors())
 app.use(express.json())
@@ -23,6 +24,17 @@ app.get("/api/scenarios", (req, res)=>{
     name: s.name,
     language: s.language,
     difficulty: s.difficulty
+  }))
+  res.json(list)
+})
+
+app.get("/api/writing-scenarios", (req, res)=>{
+  const list = Object.entries(writingScenarios).map(([key, s])=>({
+    key,
+    name: s.name,
+    register: s.register,
+    difficulty: s.difficulty,
+    task: s.task
   }))
   res.json(list)
 })
