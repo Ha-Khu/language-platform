@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import Landing from './pages/Landing'
 import ProtectedRoute from './components/ProtectedRoute'
 import Scenarios from './pages/Scenarios'
+import WritingScenarios from './pages/WritingScenarios'
 
 function App(){
   return(
@@ -13,13 +14,9 @@ function App(){
         <Route path='/' element={<Landing />} />
         <Route path='/register' element={<Register />}/>
         <Route path='/login' element={<Login />}/>
-        <Route path='/scenarios' element={<Scenarios />}/>
-        <Route path='/chat/:scenario' element={
-          <ProtectedRoute>
-            <Chat />
-            <Scenarios />
-          </ProtectedRoute>
-          }/>
+        <Route path='/scenarios' element={<ProtectedRoute><Scenarios /></ProtectedRoute>}/>
+        <Route path='/chat/:scenario' element={<ProtectedRoute><Chat /></ProtectedRoute>}/>
+        <Route path='/writing-scenarios' element={<ProtectedRoute><WritingScenarios /></ProtectedRoute>}/>
       </Routes>
     </BrowserRouter>
   )
