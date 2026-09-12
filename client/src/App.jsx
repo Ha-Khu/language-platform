@@ -6,6 +6,7 @@ import Landing from './pages/Landing'
 import ProtectedRoute from './components/ProtectedRoute'
 import Scenarios from './pages/Scenarios'
 import WritingScenarios from './pages/WritingScenarios'
+import Writing from './pages/Writing'
 
 function App(){
   return(
@@ -17,6 +18,8 @@ function App(){
         <Route path='/scenarios' element={<ProtectedRoute><Scenarios /></ProtectedRoute>}/>
         <Route path='/chat/:scenario' element={<ProtectedRoute><Chat /></ProtectedRoute>}/>
         <Route path='/writing-scenarios' element={<ProtectedRoute><WritingScenarios /></ProtectedRoute>}/>
+        <Route path='/writing/:scenario' element={<ProtectedRoute><Writing /></ProtectedRoute>}/>
+
       </Routes>
     </BrowserRouter>
   )
