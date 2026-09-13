@@ -25,8 +25,23 @@ function Writing(){
     loadTask()
   }, [])
 
+  async function handleEvaluate(){
+  const res = await fetch("http://localhost:3001/api/evaluate", {
+      method: "POST",
+      headers: {"Authorization" : `Bearer ${token}`, "Content-type" : "application/json"},
+      body: JSON.stringify({scenario, text})
+    })
+    const data = await res.json()
+    setFeedback(data.feedback)
+  }
+
   return(
+    <div>
       <p> {task} </p>
+      <textarea value={text} onChange={e => setText(e.target.value)} />
+      <button onClick={handleEvaluate}>Evaluate</button>
+      <p>{feedback}</p> 
+    </div>
   )
 }
 
